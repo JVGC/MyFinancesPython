@@ -27,19 +27,18 @@ def contextualize(f):
 @contextualize
 def add_new_debt_route():
 
-
+    description = g.fields.get('description')
     part_value = g.fields.get('part_value')
     total_parts = g.fields.get('total_parts')
     start_date = g.fields.get('start_date')
-    end_date = g.fields.get('end_date')
     paid_parts = g.fields.get('paid_parts')
 
     add_new_debt = AddNewDebt(DebtRepositoryMemory())
 
-    new_debt = add_new_debt.execute(part_value,
+    new_debt = add_new_debt.execute(description,
+                                    part_value,
                                     total_parts,
                                     start_date,
-                                    end_date,
                                     paid_parts)
 
     print(new_debt)

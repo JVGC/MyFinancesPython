@@ -1,14 +1,15 @@
 class Debt:
     def __init__(self,
+                description=None,
                 part_value=None,
                 total_parts=None,
                 start_date=None,
-                end_date=None,
                 total_value=None,
                 paid_parts=None,
                 remaining_parts=None,
                 remaining_value=None):
-    
+
+        self._description = None
         self._part_value = None
         self._total_parts = None
         self._total_value = None
@@ -16,8 +17,9 @@ class Debt:
         self._remaining_parts = None
         self._remaining_value = None
         self._start_date = None
-        self._end_date = None
+        
 
+        self.description = description
         self.part_value = part_value
         self.total_parts = total_parts
         self.total_value = total_value
@@ -25,7 +27,18 @@ class Debt:
         self.remaining_parts = remaining_parts
         self.remaining_value = remaining_value
         self.start_date = start_date
-        self.end_date = end_date
+
+
+    @property
+    def description(self):
+        return self.description
+
+    @description.setter
+    def description(self, value):
+        if value is None:
+            raise Exception('Error: A descrição não pode estar em branco!')
+
+        self._description = value
 
     @property
     def part_value(self):
@@ -103,14 +116,3 @@ class Debt:
             raise Exception('Error: A data inicial não pode estar em branco!')
 
         self._start_date = value
-
-    @property
-    def end_date(self):
-        return self.end_date
-
-    @end_date.setter
-    def end_date(self, value):
-        if value is None:
-            raise Exception('Error: A data final não pode estar em branco!')
-
-        self._end_date = value

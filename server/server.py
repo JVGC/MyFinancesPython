@@ -19,6 +19,6 @@ class Server:
         self.APP.add_url_rule('/debt/add', view_func=add_new_debt_route, methods=['POST'])
 
     def run(self):
-        self.APP.run(host='0.0.0.0', port=5000, threaded=True, use_reloader=False)
+        self.APP.run(host='0.0.0.0', port=5000, threaded=True, use_reloader=True)
 
 main_server = Server()
