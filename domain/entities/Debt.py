@@ -1,5 +1,6 @@
 class Debt:
     def __init__(self,
+                id=None,
                 description=None,
                 part_value=None,
                 total_parts=None,
@@ -9,6 +10,7 @@ class Debt:
                 remaining_parts=None,
                 remaining_value=None):
 
+        self._id = None
         self._description = None
         self._part_value = None
         self._total_parts = None
@@ -18,7 +20,7 @@ class Debt:
         self._remaining_value = None
         self._start_date = None
         
-
+        self.id = id
         self.description = description
         self.part_value = part_value
         self.total_parts = total_parts
@@ -27,6 +29,18 @@ class Debt:
         self.remaining_parts = remaining_parts
         self.remaining_value = remaining_value
         self.start_date = start_date
+
+    @property
+    def id(self):
+        return self.id
+
+    @id.setter
+    def id(self, value):
+        if value is None:
+            raise Exception('Error: O ID não pode estar em branco!')
+
+        self._id = value
+
 
 
     @property
@@ -116,3 +130,7 @@ class Debt:
             raise Exception('Error: A data inicial não pode estar em branco!')
 
         self._start_date = value
+
+    
+    def is_paid(self):
+        return self.remaining_parts == 0

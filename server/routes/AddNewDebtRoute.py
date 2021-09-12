@@ -41,8 +41,6 @@ def add_new_debt_route():
                                     start_date,
                                     paid_parts)
 
-    print(new_debt)
-
     return jsonify({
         'message': 'Funfou',
         'newDebt': new_debt
