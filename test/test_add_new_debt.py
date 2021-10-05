@@ -1,12 +1,12 @@
 import unittest
 from domain.useCases import AddNewDebt
-from  infra.repositories import DebtRepositoryMemory
+from  infra.repositories import DebtRepositoryMemory, DebtRepositoryMongo
 
 class TestAddNewDebt(unittest.TestCase):
 
     def test_add_new_debt_success(self):
-        debt_repository_memory = DebtRepositoryMemory()
-        add_new_debt = AddNewDebt(debt_repository_memory)
+        debt_repository_mongo = DebtRepositoryMongo()
+        add_new_debt = AddNewDebt(debt_repository_mongo)
 
         new_debt = add_new_debt.execute(description = "test debt",
                             part_value = 135,

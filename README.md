@@ -22,3 +22,16 @@ Project designed to help organize my personal finances
 - Deletar um débito
 - Adicionar um novo débito
 - Atualizar um débito
+
+## TODO
+- Testar erros nos casos de uso
+- Adicionar array de meses
+- Criar casos de uso:
+    - Deletar um débito
+    - Buscar pelos débitos em aberto
+    - Buscar pelas dívidas para um determinado mês
+
+- Adicionar o Mongo
+- Criar Adapter para o Flask
+- Criar validações com o cerberus
+- Implementar Docker-Compose
