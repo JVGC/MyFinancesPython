@@ -1,13 +1,13 @@
 from uuid import uuid4
 from domain.useCases.UpdateDebtDescription import UpdateDebtDescription
-from infra.repositories import DebtRepositoryMemory
+from infra.repositories import DebtRepositoryMemory, DebtRepositoryMongo
 import unittest
 
 class TestUpdateDebtDescription(unittest.TestCase):
 
     def test_update_debt_description_success(self):
-        debt_repository_memory = DebtRepositoryMemory()
-        debt_data = debt_repository_memory.add(_id = str(uuid4()),
+        debt_repository_mongo = DebtRepositoryMongo()
+        debt_data = debt_repository_mongo.add(_id = str(uuid4()),
                                                 description =  "test debt",
                                                 part_value =  135,
                                                 total_parts =  10,
@@ -16,7 +16,7 @@ class TestUpdateDebtDescription(unittest.TestCase):
                                                 total_value = 1350,
                                                 remaining_parts= 10,
                                                 remaining_value= 1350)
-        update_debt = UpdateDebtDescription(debt_repository_memory)
+        update_debt = UpdateDebtDescription(debt_repository_mongo)
 
         updated_debt = update_debt.execute(id = debt_data._id, description= 'testando update')
 

@@ -1,6 +1,8 @@
 from pymongo import DESCENDING, ASCENDING, TEXT, MongoClient, ReturnDocument
 from time import sleep,time
 from uuid import uuid4
+
+from pymongo.message import query, update
 from domain.repositories import DebtRepository
 from adapters import DebtAdapter
 
@@ -51,3 +53,55 @@ class DebtRepositoryMongo(DebtRepository):
                                 new_debt['paid_parts'],
                                 new_debt['remaining_parts'],
                                 new_debt['remaining_value'])
+
+    def get_by_id(self, _id):
+
+        debt = self.db['debts'].find_one(filter={'_id': _id})
+
+        return self.debt_adapter.adapt(debt['_id'], 
+                                debt['description'], 
+                                debt['part_value'],
+                                debt['total_parts'],
+                                debt['start_date'],
+                                debt['total_value'],
+                                debt['paid_parts'],
+                                debt['remaining_parts'],
+                                debt['remaining_value'])
+
+    def update_description(self, _id, description):
+        self.db['debts'].update_one(filter={'_id': _id}, update={'$set':{'description': description}})
+
+        debt = self.db['debts'].find_one(filter={'_id': _id})
+
+        return self.debt_adapter.adapt(debt['_id'], 
+                                debt['description'], 
+                                debt['part_value'],
+                                debt['total_parts'],
+                                debt['start_date'],
+                                debt['total_value'],
+                                debt['paid_parts'],
+                                debt['remaining_parts'],
+                                debt['remaining_value'])
+
+    def pay_debt_part(self, _id, paid_parts, remaining_parts, remaining_value):
+        
+        update_obj = {
+            'paid_parts': paid_parts,
+            'remaining_parts': remaining_parts,
+            'remaining_value': remaining_value
+        }
+        self.db['debts'].update_one(filter={'_id': _id}, update={'$set':update_obj})
+
+        debt = self.db['debts'].find_one(filter={'_id': _id})
+
+        return self.debt_adapter.adapt(debt['_id'], 
+                                debt['description'], 
+                                debt['part_value'],
+                                debt['total_parts'],
+                                debt['start_date'],
+                                debt['total_value'],
+                                debt['paid_parts'],
+                                debt['remaining_parts'],
+                                debt['remaining_value'])
+
+

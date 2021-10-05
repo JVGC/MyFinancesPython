@@ -20,7 +20,7 @@ class DebtRepository(metaclass=abc.ABCMeta):
     def get_by_id(self, _id):
         pass
 
-    def update_description(self, description=None):
+    def update_description(self, _id, description):
         pass
     
     def pay_debt_part(self, _id, paid_parts, remaining_parts, remaining_value):
