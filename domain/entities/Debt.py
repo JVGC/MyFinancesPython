@@ -133,4 +133,4 @@ class Debt:
 
     
     def is_paid(self):
-        return self.remaining_parts == 0
+        return self._remaining_parts == 0
