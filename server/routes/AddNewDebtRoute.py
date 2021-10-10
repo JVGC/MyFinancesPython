@@ -1,28 +1,8 @@
-from flask import g, request, jsonify
-from functools import wraps
-from os import stat
+from flask import g, jsonify
 
+from server.decorators import contextualize
 from domain.useCases import AddNewDebt
-from infra.repositories import DebtRepositoryMemory
-def contextualize(f):
-    """
-    Percorre todos os campos enviados através do request.get_json()
-
-    Returns:
-        - Erro se o campo estiver vazio ou se for inválido
-        - Armazena os campos dentro de fields do g (contexto do flask)
-    """
-    @wraps(f)
-    def decorated_function(*args, **kwargs):
-        g.fields = {}
-        fields = request.get_json()
-        for field in fields:
-            value = fields[field]
-            g.fields[field] = value
-        return f(*args, **kwargs)
-    return decorated_function
-
-
+from infra.repositories import DebtRepositoryMongo
 
 @contextualize
 def add_new_debt_route():
@@ -33,7 +13,7 @@ def add_new_debt_route():
     start_date = g.fields.get('start_date')
     paid_parts = g.fields.get('paid_parts')
 
-    add_new_debt = AddNewDebt(DebtRepositoryMemory())
+    add_new_debt = AddNewDebt(DebtRepositoryMongo())
 
     new_debt = add_new_debt.execute(description,
                                     part_value,
@@ -42,6 +22,6 @@ def add_new_debt_route():
                                     paid_parts)
 
     return jsonify({
-        'message': 'Funfou',
-        'newDebt': new_debt
+        'message': 'Requisição Executada com sucesso',
+        'newDebt': new_debt.to_dict()
     }), 200

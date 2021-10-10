@@ -45,7 +45,11 @@ class DebtRepositoryMemory(DebtRepository):
 
     def get_by_id(self, _id):
 
-        found_debt = [debt for debt in self.debts if debt['_id'] == _id][0]
+        found_debt = [debt for debt in self.debts if debt['_id'] == _id]
+
+
+        found_debt = found_debt[0]
+
         return self.debt_adapter.adapt(found_debt['_id'], 
                                 found_debt['description'], 
                                 found_debt['part_value'],

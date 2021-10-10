@@ -1,8 +1,8 @@
 
 import os
-from flask import Flask, Blueprint, session, request, g, jsonify
+from flask import Flask, Blueprint
 from flask_cors import CORS
-from .routes import add_new_debt_route
+from .routes import add_new_debt_route, get_debt_by_id_route, pay_debt_part_route, update_debt_description_route
 
 
 class Server:
@@ -17,6 +17,9 @@ class Server:
     
     def _configure_routes(self):
         self.APP.add_url_rule('/debt/add', view_func=add_new_debt_route, methods=['POST'])
+        self.APP.add_url_rule('/debt/<debt_id>', view_func=get_debt_by_id_route, methods=['GET'])
+        self.APP.add_url_rule('/debt/pay', view_func=pay_debt_part_route, methods=['POST'])
+        self.APP.add_url_rule('/debt/description/<debt_id>', view_func=update_debt_description_route, methods=['PUT'])
 
     def run(self):
         self.APP.run(host='0.0.0.0', port=5000, threaded=True, use_reloader=True)

@@ -42,17 +42,19 @@ class DebtRepositoryMongo(DebtRepository):
             'remaining_value': remaining_value
         }
 
-        self.db['debts'].insert_one(new_debt)
+        new_debt_id = self.db['debts'].insert_one(new_debt).inserted_id
+        
+        new_debt_data = self.db['debts'].find_one(filter={'_id': new_debt_id})
 
-        return self.debt_adapter.adapt(new_debt['_id'], 
-                                new_debt['description'], 
-                                new_debt['part_value'],
-                                new_debt['total_parts'],
-                                new_debt['start_date'],
-                                new_debt['total_value'],
-                                new_debt['paid_parts'],
-                                new_debt['remaining_parts'],
-                                new_debt['remaining_value'])
+        return self.debt_adapter.adapt(new_debt_data['_id'], 
+                                new_debt_data['description'], 
+                                new_debt_data['part_value'],
+                                new_debt_data['total_parts'],
+                                new_debt_data['start_date'],
+                                new_debt_data['total_value'],
+                                new_debt_data['paid_parts'],
+                                new_debt_data['remaining_parts'],
+                                new_debt_data['remaining_value'])
 
     def get_by_id(self, _id):
 

@@ -7,7 +7,7 @@ class PayDebtPart:
 
     def execute(self, id):
         debt = self.debt_repository.get_by_id(id)
-        # print(type(debt))
+
         if debt.is_paid():
             raise Exception('Error: Esse débito já está totalmente pago')
 

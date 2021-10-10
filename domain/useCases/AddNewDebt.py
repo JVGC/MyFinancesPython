@@ -7,7 +7,7 @@ class AddNewDebt:
     def __init__(self, debt_repository: DebtRepository):
         self.debt_repository = debt_repository
 
-    def execute(self, description, part_value, total_parts, start_date, paid_parts):
+    def execute(self, description, part_value, total_parts, start_date, paid_parts) -> Debt:
         total_value = part_value * total_parts
         remaining_parts = total_parts - paid_parts
         remaining_value = remaining_parts*part_value
