@@ -1,14 +1,16 @@
+from .Date import Date
+
 class Debt:
     def __init__(self,
-                id=None,
-                description=None,
-                part_value=None,
-                total_parts=None,
-                start_date=None,
-                total_value=None,
-                paid_parts=None,
-                remaining_parts=None,
-                remaining_value=None):
+                id:str = None,
+                description:str = None,
+                part_value:float = None,
+                total_parts:int = None,
+                start_date:Date = None,
+                total_value:float = None,
+                paid_parts:int = None,
+                remaining_parts:int = None,
+                remaining_value:float = None):
 
         self._id = None
         self._description = None
@@ -40,8 +42,6 @@ class Debt:
             raise Exception('Error: O ID não pode estar em branco!')
 
         self._id = value
-
-
 
     @property
     def description(self):
@@ -134,3 +134,15 @@ class Debt:
     
     def is_paid(self):
         return self._remaining_parts == 0
+
+    def to_dict(self):
+        return {
+            '_id': self._id,
+            'description': self._description,
+            'part_value': self._part_value,
+            'total_parts': self._total_parts,
+            'paid_parts': self._paid_parts,
+            'remaining_parts': self._remaining_parts,
+            'remaining_value': self._remaining_value,
+            'start_data': self._start_date
+        }
