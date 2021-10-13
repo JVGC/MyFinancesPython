@@ -34,3 +34,7 @@ class DebtRepository(metaclass=abc.ABCMeta):
     @abc.abstractmethod
     def pay_debt_part(self, _id:str, paid_parts:int, remaining_parts:int, remaining_value:float) -> Debt:
         pass
+
+    @abc.abstractmethod
+    def delete_by_id(self, _id:str) -> str:
+        pass

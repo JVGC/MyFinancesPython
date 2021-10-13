@@ -64,7 +64,7 @@ class DebtRepositoryMongo(DebtRepository):
                                 debt['description'], 
                                 debt['part_value'],
                                 debt['total_parts'],
-                                debt['start_date'],
+                                debt['months'],
                                 debt['total_value'],
                                 debt['paid_parts'],
                                 debt['remaining_parts'],
@@ -107,3 +107,9 @@ class DebtRepositoryMongo(DebtRepository):
                                 debt['remaining_value'])
 
 
+    def delete_by_id(self, _id: str) -> str:
+        
+
+        self.db['debts'].delete_one({'_id':_id})
+
+        return _id

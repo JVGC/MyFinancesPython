@@ -1,7 +1,5 @@
 from uuid import uuid4
-from domain.entities.Date import Date
-from domain.entities.Debt import Debt
-from domain.entities.PayableMonth import PayableMonth
+from domain.entities import Date, Debt, PayableMonth
 from domain.repositories import DebtRepository
 
 class AddNewDebt:
@@ -9,7 +7,7 @@ class AddNewDebt:
     def __init__(self, debt_repository: DebtRepository):
         self.debt_repository = debt_repository
 
-    def execute(self, description, part_value, total_parts, start_date, paid_parts) -> Debt:
+    def execute(self, description:str, part_value:float, total_parts:int, start_date:dict, paid_parts:int) -> Debt:
         total_value = part_value * total_parts
         remaining_parts = total_parts - paid_parts
         remaining_value = remaining_parts*part_value
