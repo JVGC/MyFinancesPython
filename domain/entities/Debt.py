@@ -1,3 +1,5 @@
+from typing import List
+from domain.entities.PayableMonth import PayableMonth
 from .Date import Date
 
 class Debt:
@@ -6,7 +8,7 @@ class Debt:
                 description:str = None,
                 part_value:float = None,
                 total_parts:int = None,
-                start_date:Date = None,
+                months: List[PayableMonth] = None,
                 total_value:float = None,
                 paid_parts:int = None,
                 remaining_parts:int = None,
@@ -20,7 +22,7 @@ class Debt:
         self._paid_parts =  None
         self._remaining_parts = None
         self._remaining_value = None
-        self._start_date = None
+        self._months = None
         
         self.id = id
         self.description = description
@@ -30,7 +32,7 @@ class Debt:
         self.paid_parts =  paid_parts
         self.remaining_parts = remaining_parts
         self.remaining_value = remaining_value
-        self.start_date = start_date
+        self.months = months
 
     @property
     def id(self):
@@ -121,15 +123,15 @@ class Debt:
         self._remaining_value = value
 
     @property
-    def start_date(self):
-        return self.start_date
+    def months(self):
+        return self.months
 
-    @start_date.setter
-    def start_date(self, value):
+    @months.setter
+    def months(self, value):
         if value is None:
-            raise Exception('Error: A data inicial não pode estar em branco!')
+            raise Exception('Error: O array de meses não pode estar em branco!')
 
-        self._start_date = value
+        self._months = value
 
     
     def is_paid(self):
@@ -144,5 +146,5 @@ class Debt:
             'paid_parts': self._paid_parts,
             'remaining_parts': self._remaining_parts,
             'remaining_value': self._remaining_value,
-            'start_data': self._start_date
+            'start_data': self._months
         }

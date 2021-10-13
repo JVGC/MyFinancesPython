@@ -1,5 +1,7 @@
 from uuid import uuid4
+from domain.entities.Date import Date
 from domain.entities.Debt import Debt
+from domain.entities.PayableMonth import PayableMonth
 from domain.repositories import DebtRepository
 
 class AddNewDebt:
@@ -12,11 +14,26 @@ class AddNewDebt:
         remaining_parts = total_parts - paid_parts
         remaining_value = remaining_parts*part_value
         
+        months = []
+        year = start_date['year']
+        month = start_date['month']
+
+        for _ in range(total_parts):
+            date = Date(year = year,month=month)
+            months.append(PayableMonth(date=date))
+
+            next_month = date.get_next_month()
+            month = next_month['month']
+            year = next_month['year']
+
+        for i in range(paid_parts):
+            months[i].pay()
+
         new_debt = Debt(str(uuid4()),
                         description, 
                         part_value,
                         total_parts,
-                        start_date,
+                        months,
                         total_value,
                         paid_parts,
                         remaining_parts,
@@ -26,7 +43,7 @@ class AddNewDebt:
                                         new_debt._description, 
                                         new_debt._part_value,
                                         new_debt._total_parts,
-                                        new_debt._start_date,
+                                        new_debt._months,
                                         new_debt._total_value,
                                         new_debt._paid_parts,
                                         new_debt._remaining_parts,

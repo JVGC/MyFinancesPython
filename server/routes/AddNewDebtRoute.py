@@ -1,4 +1,5 @@
 from flask import g, jsonify
+from domain.entities.Date import Date
 
 from server.decorators import contextualize
 from domain.useCases import AddNewDebt

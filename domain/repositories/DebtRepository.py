@@ -1,7 +1,9 @@
 import abc
+from typing import List
 
 from domain.entities.Date import Date
 from domain.entities.Debt import Debt
+from domain.entities.PayableMonth import PayableMonth
 
 class DebtRepository(metaclass=abc.ABCMeta):
 
@@ -14,7 +16,7 @@ class DebtRepository(metaclass=abc.ABCMeta):
             description:str,
             part_value:float,
             total_parts:int,
-            start_date:Date,
+            months:List[PayableMonth],
             total_value:float,
             paid_parts:int,
             remaining_parts:int,
