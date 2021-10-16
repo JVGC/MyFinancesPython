@@ -1,3 +1,3 @@
-from server.server import main_server
+from infra.http.flask import flask_server
 
-main_server.run()
+flask_server.run()
