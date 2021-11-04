@@ -1,6 +1,8 @@
-from typing import Tuple
+
 from domain.repositories import DebtRepository
 from domain.useCases import AddNewDebt, GetDebtById, PayDebtPart, UpdateDebtDescription, DeleteDebtById
+from infra.controllers.contracts.http import HttpRequest, HttpResponse
+from infra.controllers.errors import InvalidFieldsError, NotFoundError
 
 class DebtController:
 
@@ -8,7 +10,10 @@ class DebtController:
 
         self.debt_repository = debt_repository
 
-    def add_new_debt(self, params, body, url_params) -> Tuple[dict, int]:
+    def add_new_debt(self, http_request: HttpRequest) -> HttpResponse:
+
+        body = http_request.body
+
         description = body.get('description')
         part_value = body.get('part_value')
         total_parts = body.get('total_parts')
@@ -17,58 +22,80 @@ class DebtController:
 
         add_new_debt = AddNewDebt(self.debt_repository)
 
-        new_debt = add_new_debt.execute(description,
+        response = add_new_debt.execute(description,
                                         part_value,
                                         total_parts,
                                         start_date,
                                         paid_parts)
 
-        return {
-            'message': 'Requisição Executada com sucesso',
-            'debt': new_debt.to_dict()
-        }, 200
+        if response.is_err():
+            return InvalidFieldsError(field=response.err().entity, reason=response.err().reason)
 
-    def get_debt_by_id(self, params, body, url_params) -> Tuple[dict, int]:
+        new_debt = response.ok()
+
+        return HttpResponse({'message': 'Requisição Executada com sucesso',
+                                'debt': new_debt.to_dict()
+                            }, 200)
+    def get_debt_by_id(self, http_request: HttpRequest) -> HttpResponse:
         get_debt_by_id = GetDebtById(self.debt_repository)
 
-        debt = get_debt_by_id.execute(url_params.get('debt_id'))
+        params = http_request.params
+        response = get_debt_by_id.execute(params.get('debt_id'))
 
-        return {
-            'message': 'Requisição Executada com sucesso',
-            'debt': debt.to_dict()
-        }, 200
+        if response.is_err():
+            return NotFoundError(response.err().message)
 
-    def pay_debt_part(self, params, body, url_params) -> Tuple[dict, int]:
+        debt = response.ok()
+
+        return HttpResponse({'message': 'Requisição Executada com sucesso',
+                                'debt': debt.to_dict()
+                            }, 200)
+
+    def pay_debt_part(self, http_request: HttpRequest) -> HttpResponse:
+
+        body = http_request.body
         debt_id = body.get('debt_id')
 
         pay_debt_part = PayDebtPart(self.debt_repository)
 
-        paid_debt =  pay_debt_part.execute(debt_id)
+        paid_debt = pay_debt_part.execute(debt_id)
 
-        return {
-            'message': 'Débito pago com sucesso',
-            'debt': paid_debt.to_dict()
-        }, 200
+        return HttpResponse({'message': 'Requisição Executada com sucesso',
+                                'debt': paid_debt.to_dict()
+                            }, 200)
 
-    def update_debt_description(self, params, body, url_params) -> Tuple[dict, int]:
+    def update_debt_description(self, http_request: HttpRequest) -> HttpResponse:
+
+        body = http_request.body
+        params = http_request.params
         new_description = body.get('description')
 
         update_debt_description = UpdateDebtDescription(self.debt_repository)
 
-        debt = update_debt_description.execute(url_params.get('debt_id'), new_description)
+        response = update_debt_description.execute(params.get('debt_id'), new_description)
 
-        return {
-            'message': 'Requisição executada com sucesso',
-            'debt': debt.to_dict()
-        }, 200
+        if response.is_err():
+            return NotFoundError(response.err().message)
+
+        debt = response.ok()
+
+        return HttpResponse({'message': 'Requisição Executada com sucesso',
+                                'debt': debt.to_dict()
+                            }, 200)
     
-    def delete_debt_by_id(self, params, body, url_params) -> Tuple[dict, int]:
+    def delete_debt_by_id(self, http_request: HttpRequest) -> HttpResponse:
+        
+        params = http_request.params
+        
         delete_debt_by_id = DeleteDebtById(self.debt_repository)
 
-        deleted_id = delete_debt_by_id.execute(url_params.get('debt_id'))
+        response = delete_debt_by_id.execute(params.get('debt_id'))
 
-        if deleted_id:
-            return {
-            'message': 'Requisição Executada com sucesso',
-            '_id': deleted_id
-        }, 200 
+        if response.is_err():
+            return NotFoundError(response.err().message)
+
+        deleted_id = response.ok()
+
+        return HttpResponse({'message': 'Requisição Executada com sucesso',
+                                'debt_id': deleted_id
+                            }, 200)
