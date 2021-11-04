@@ -1,6 +1,4 @@
-from domain.entities.Debt import Debt
-
-
+from domain.entities import Date, Debt
 class DebtAdapter():
 
     def __init__(self):
@@ -10,18 +8,14 @@ class DebtAdapter():
             description, 
             part_value,
             total_parts,
-            months,
-            total_value,
-            paid_parts,
-            remaining_parts,
-            remaining_value):
+            start_date,
+            paid_parts):
 
-        return Debt(_id,
+        start_date = Date.create(start_date['year'], start_date['month']).ok()
+
+        return Debt.create(_id,
                 description,
                 part_value,
                 total_parts,
-                months,
-                total_value,
-                paid_parts,
-                remaining_parts,
-                remaining_value)
+                start_date,
+                paid_parts).ok()
