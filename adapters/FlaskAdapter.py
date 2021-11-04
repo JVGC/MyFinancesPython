@@ -1,18 +1,23 @@
 
 from flask import request, g, jsonify
 from functools import wraps
-
+from infra.controllers.contracts import HttpRequest
 class FlaskAdapter:
 
     def __init__(self) -> None:
         pass
     
-    
-    def create(self, fn):
+    @staticmethod
+    def create(fn):
 
         @wraps(fn)
         def decorated_function(**kwargs):
-            obj, status_code = fn(request.args, request.get_json(), kwargs)
-            return jsonify(obj), status_code
+
+            http_request = HttpRequest(body=request.get_json(),
+                                        query=request.args,
+                                        params=kwargs)
+
+            http_response = fn(http_request)
+            return jsonify(http_response.body), http_response.status_code
 
         return decorated_function
