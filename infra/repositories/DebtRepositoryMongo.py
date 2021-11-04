@@ -24,7 +24,7 @@ class DebtRepositoryMongo(DebtRepository):
             description,
             part_value,
             total_parts,
-            months,
+            start_date,
             total_value,
             paid_parts,
             remaining_parts,
@@ -35,7 +35,7 @@ class DebtRepositoryMongo(DebtRepository):
             'description': description,
             'part_value': part_value,
             'total_parts': total_parts,
-            'months': [month.to_dict() for month in months],
+            'start_date': start_date,
             'total_value': total_value,
             'paid_parts': paid_parts,
             'remaining_parts': remaining_parts,
@@ -46,29 +46,25 @@ class DebtRepositoryMongo(DebtRepository):
         
         new_debt_data = self.db['debts'].find_one(filter={'_id': new_debt_id})
 
+
         return self.debt_adapter.adapt(new_debt_data['_id'], 
                                 new_debt_data['description'], 
                                 new_debt_data['part_value'],
                                 new_debt_data['total_parts'],
-                                new_debt_data['months'],
-                                new_debt_data['total_value'],
-                                new_debt_data['paid_parts'],
-                                new_debt_data['remaining_parts'],
-                                new_debt_data['remaining_value'])
+                                new_debt_data['start_date'],
+                                new_debt_data['paid_parts'])
 
     def get_by_id(self, _id):
 
         debt = self.db['debts'].find_one(filter={'_id': _id})
-
+        if not debt:
+            return None
         return self.debt_adapter.adapt(debt['_id'], 
                                 debt['description'], 
                                 debt['part_value'],
                                 debt['total_parts'],
-                                debt['months'],
-                                debt['total_value'],
-                                debt['paid_parts'],
-                                debt['remaining_parts'],
-                                debt['remaining_value'])
+                                debt['start_date'],
+                                debt['paid_parts'],)
 
     def update_description(self, _id, description):
         self.db['debts'].update_one(filter={'_id': _id}, update={'$set':{'description': description}})
@@ -80,10 +76,7 @@ class DebtRepositoryMongo(DebtRepository):
                                 debt['part_value'],
                                 debt['total_parts'],
                                 debt['start_date'],
-                                debt['total_value'],
-                                debt['paid_parts'],
-                                debt['remaining_parts'],
-                                debt['remaining_value'])
+                                debt['paid_parts'])
 
     def pay_debt_part(self, _id, paid_parts, remaining_parts, remaining_value):
         
@@ -101,15 +94,10 @@ class DebtRepositoryMongo(DebtRepository):
                                 debt['part_value'],
                                 debt['total_parts'],
                                 debt['start_date'],
-                                debt['total_value'],
-                                debt['paid_parts'],
-                                debt['remaining_parts'],
-                                debt['remaining_value'])
+                                debt['paid_parts'])
 
 
     def delete_by_id(self, _id: str) -> str:
-        
-
         self.db['debts'].delete_one({'_id':_id})
 
         return _id
