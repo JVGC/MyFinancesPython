@@ -1,51 +1,47 @@
+from typing import Union
 from uuid import uuid4
-from domain.entities import Date, Debt, PayableMonth
+from domain.entities import Date, Debt, Date
 from domain.repositories import DebtRepository
+from domain.useCases.ports import StartDate
+from domain.entities.errors import InvalidMonth, InvalidType, InvalidDay
 
+from utils.result import Error, Ok, Result
 class AddNewDebt:
     
     def __init__(self, debt_repository: DebtRepository):
         self.debt_repository = debt_repository
 
-    def execute(self, description:str, part_value:float, total_parts:int, start_date:dict, paid_parts:int) -> Debt:
-        total_value = part_value * total_parts
-        remaining_parts = total_parts - paid_parts
-        remaining_value = remaining_parts*part_value
+    def execute(self, description:str, part_value:float, total_parts:int, start_date_data:StartDate, paid_parts:int) -> Result[Debt, Union[InvalidMonth, InvalidType]]:
         
-        months = []
-        year = start_date['year']
-        month = start_date['month']
+        date_or_err = Date.create(start_date_data['year'], start_date_data['month'])
 
-        for _ in range(total_parts):
-            date = Date(year = year,month=month)
-            months.append(PayableMonth(date=date))
+        if date_or_err.is_err():
+            return Error(date_or_err.err())
+        
+        start_date = date_or_err.ok()
 
-            next_month = date.get_next_month()
-            month = next_month['month']
-            year = next_month['year']
-
-        for i in range(paid_parts):
-            months[i].pay()
-
-        new_debt = Debt(str(uuid4()),
+        debt_or_err = Debt.create(str(uuid4()),
                         description, 
                         part_value,
                         total_parts,
-                        months,
-                        total_value,
-                        paid_parts,
-                        remaining_parts,
-                        remaining_value)
+                        start_date,
+                        paid_parts)
 
-        return self.debt_repository.add(new_debt._id,
-                                        new_debt._description, 
-                                        new_debt._part_value,
-                                        new_debt._total_parts,
-                                        new_debt._months,
-                                        new_debt._total_value,
-                                        new_debt._paid_parts,
-                                        new_debt._remaining_parts,
-                                        new_debt._remaining_value)
+        if debt_or_err.is_err():
+            return Error(debt_or_err.err())
+
+        new_debt = debt_or_err.ok()
+
+        added_debt = self.debt_repository.add(new_debt.id,
+                                        new_debt.description, 
+                                        new_debt.part_value,
+                                        new_debt.total_parts,
+                                        new_debt.start_date.to_dict(),
+                                        new_debt.total_value,
+                                        new_debt.paid_parts,
+                                        new_debt.remaining_parts,
+                                        new_debt.remaining_value)
+        return Ok(added_debt)
 
 
 
