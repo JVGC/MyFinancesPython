@@ -1,5 +1,7 @@
-from typing import List
-from domain.entities.PayableMonth import PayableMonth
+from __future__ import annotations
+from typing import Union
+from domain.entities.errors import InvalidType
+from utils.result import E, Error, Ok, Result
 from .Date import Date
 
 class Debt:
@@ -8,143 +10,88 @@ class Debt:
                 description:str = None,
                 part_value:float = None,
                 total_parts:int = None,
-                months: List[PayableMonth] = None,
-                total_value:float = None,
-                paid_parts:int = None,
-                remaining_parts:int = None,
-                remaining_value:float = None):
-
-        self._id = None
-        self._description = None
-        self._part_value = None
-        self._total_parts = None
-        self._total_value = None
-        self._paid_parts =  None
-        self._remaining_parts = None
-        self._remaining_value = None
-        self._months = None
+                start_date: Date = None,
+                paid_parts:int = None):
         
         self.id = id
         self.description = description
         self.part_value = part_value
         self.total_parts = total_parts
-        self.total_value = total_value
+        self.start_date = start_date
         self.paid_parts =  paid_parts
-        self.remaining_parts = remaining_parts
-        self.remaining_value = remaining_value
-        self.months = months
 
-    @property
-    def id(self):
-        return self.id
+        self.total_value = self.part_value * self.total_parts
+        self.remaining_parts = self.total_parts - self.paid_parts
+        self.remaining_value = self.part_value * self.remaining_parts
+        
 
-    @id.setter
-    def id(self, value):
-        if value is None:
-            raise Exception('Error: O ID não pode estar em branco!')
+    @staticmethod
+    def validate(
+        id:str = None,
+        description:str = None,
+        part_value:float = None,
+        total_parts:int = None,
+        start_date: Date = None,
+        paid_parts:int = None):
+        
+        if not isinstance(id, str):
+            return Error(InvalidType('Debt: id',str, type(id)))
 
-        self._id = value
+        if not isinstance(description, str):
+            return Error(InvalidType('Debt: description',str, type(description)))
+        
+        if not isinstance(part_value, float):
+            return Error(InvalidType('Debt: part_value',float, type(part_value)))
+        
+        if not isinstance(total_parts, int):
+            return Error(InvalidType('Debt: total_parts',int, type(total_parts)))
+        
+        if not isinstance(start_date, Date):
+            return Error(InvalidType('Debt: start_date',Date, type(start_date)))
 
-    @property
-    def description(self):
-        return self.description
+        if not isinstance(paid_parts, int):
+            return Error(InvalidType('Debt: paid_parts',int, type(paid_parts)))
 
-    @description.setter
-    def description(self, value):
-        if value is None:
-            raise Exception('Error: A descrição não pode estar em branco!')
+        return Ok()
 
-        self._description = value
 
-    @property
-    def part_value(self):
-        return self.part_value
+    @staticmethod
+    def create(id:str = None,
+                description:str = None,
+                part_value:float = None,
+                total_parts:int = None,
+                start_date: Date = None,
+                paid_parts:int = None) -> Result[Debt, Union[InvalidType]]:
 
-    @part_value.setter
-    def part_value(self, value):
-        if value is None:
-            raise Exception('Error: O valor da Parcela não pode estar em branco')
+        result = Debt.validate(id,
+                description,
+                part_value,
+                total_parts,
+                start_date,
+                paid_parts)
 
-        self._part_value = value
-    
-    @property
-    def total_parts(self):
-        return self.total_parts
-
-    @total_parts.setter
-    def total_parts(self, value):
-        if value is None:
-            raise Exception('Error: O total de parcelar não pode estar em branco')
-
-        self._total_parts = value
-
-    @property
-    def total_value(self):
-        return self.total_value
-
-    @total_value.setter
-    def total_value(self, value):
-        if value is None:
-            raise Exception('Error: O valor total não pode estar em branco')
-
-        self._total_value = value
-
-    @property
-    def paid_parts(self):
-        return self.paid_parts
-
-    @paid_parts.setter
-    def paid_parts(self, value):
-        if value is None:
-            raise Exception('Error: O numero de parcelas pagas não pode estar em branco')
-
-        self._paid_parts = value
-
-    @property
-    def remaining_parts(self):
-        return self.remaining_parts
-
-    @remaining_parts.setter
-    def remaining_parts(self, value):
-        if value is None:
-            raise Exception('Error: As parcelas restantes não podem estar em branco')
-
-        self._remaining_parts = value
-
-    @property
-    def remaining_value(self):
-        return self.remaining_value
-
-    @remaining_value.setter
-    def remaining_value(self, value):
-        if value is None:
-            raise Exception('Error: O valor restante não pode estar em branco!')
-
-        self._remaining_value = value
-
-    @property
-    def months(self):
-        return self.months
-
-    @months.setter
-    def months(self, value):
-        if value is None:
-            raise Exception('Error: O array de meses não pode estar em branco!')
-
-        self._months = value
+        if result.is_err():
+            return Error(result.err())
+        
+        return Ok(Debt(id,
+                        description,
+                        part_value,
+                        total_parts,
+                        start_date,
+                        paid_parts))
 
     
     def is_paid(self):
-        return self._remaining_parts == 0
+        return self.remaining_parts == 0
 
     def to_dict(self):
         return {
-            '_id': self._id,
-            'description': self._description,
-            'part_value': self._part_value,
-            'total_parts': self._total_parts,
-            'paid_parts': self._paid_parts,
-            'remaining_parts': self._remaining_parts,
-            'remaining_value': self._remaining_value,
-            'start_data': self._months
+            '_id': self.id,
+            'description': self.description,
+            'part_value': self.part_value,
+            'total_parts': self.total_parts,
+            'paid_parts': self.paid_parts,
+            'remaining_parts': self.remaining_parts,
+            'remaining_value': self.remaining_value,
+            'start_date': self.start_date.to_dict()
         }

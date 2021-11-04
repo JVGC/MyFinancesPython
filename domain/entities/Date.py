@@ -1,79 +1,61 @@
+from __future__ import annotations
+
+from typing import Union
+from utils import Error
+from domain.entities.errors import InvalidDay, InvalidMonth, InvalidType
+from utils.result import Ok, Result
+
+
+
 class Date:
+
+    AVAIABLE_MONTHS = [item for item in range(1, 12)]
+    AVAIABLE_DAYS = [item for item in range(1, 31)]  
+
     def __init__(self,
                 year:int=None,
                 month:str=None,
                 day:int=None):
-        
-
-        self.AVAIABLE_MONTHS = {
-            '1':'JAN', 
-            '2':'FEV', 
-            '3':'MAR',
-            '4':'APR',
-            '5':'MAY',
-            '6':'JUN',
-            '7':'JUL',
-            '8':'AUG',
-            '9':'SEP',
-            '10':'OCT',
-            '11':'NOV',
-            '12':'DEC',
-        }
-        
-        self._year = None
-        self._month = None
-        self._day = None
 
         self.year = year
         self.month = month
         self.day = day
 
-    @property
-    def year(self):
-        return self.year
-
-    @year.setter
-    def year(self, value):
-        if value is None:
-            raise Exception('Error: O ano não pode estar em branco')
-
-        self._year = value
-
-    @property
-    def month(self):
-        return self.month
-
-    @month.setter
-    def month(self, value):
-        if value is None:
-            raise Exception('Error: O mês não pode estar em branco!')
-        if value not in self.AVAIABLE_MONTHS.keys():
-            raise Exception('Error: Mês Inválido!')
-
-        self._month = value
-
-    @property
-    def day(self):
-        return self.day
-
-    @day.setter
-    def day(self, value):
-
-        self._day = value
-
-    def get_next_month(self):
+    @staticmethod
+    def create(year:int=None,
+                month:str=None,
+                day:int=None) -> Result[Date, Union[InvalidType, InvalidMonth, InvalidDay]]:
         
-        next_month = ((int(self._month))%12)+1
-        next_year =  self._year +1 if next_month <= int(self._month) else self._year
+        result = Date.validate(year, month, day)
 
-        return {
-            'month':str(next_month),
-            'year': next_year
-        }
+        if result.is_err():
+            return Error(result.err())
+
+        return Ok(Date(year, month, day))
+
+    @staticmethod
+    def validate(year, month, day):
+
+        if not isinstance(year, int):
+            return Error(InvalidType('Date: year',int, type(year)))
+
+        if not isinstance(month, int):
+            return Error(InvalidType('Date: month',int, type(month)))
+
+        if day is not None and not isinstance(day, int):
+            return Error(InvalidType('Date: day',int, type(day)))
+        
+        if month not in Date.AVAIABLE_MONTHS:
+            return Error(InvalidMonth(Date.AVAIABLE_MONTHS))
+        if day is not None and day not in Date.AVAIABLE_DAYS:
+            return Error(InvalidDay())
+
+        return Ok()
+
 
     def to_dict(self):
         return {
-            "day": self._day,
-            "month": self.AVAIABLE_MONTHS.get(self._month),
-            "year": self._year
+            "day": self.day,
+            "month": self.month,
+            "year": self.year
         }
