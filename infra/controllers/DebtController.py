@@ -3,6 +3,7 @@ from domain.repositories import DebtRepository
 from domain.useCases import AddNewDebt, GetDebtById, PayDebtPart, UpdateDebtDescription, DeleteDebtById
 from infra.controllers.contracts.http import HttpRequest, HttpResponse
 from infra.controllers.errors import InvalidFieldsError, NotFoundError
+from infra.controllers.validators.AddNewDebtValidator import AddNewDebtValidator
 
 class DebtController:
 
@@ -11,6 +12,11 @@ class DebtController:
         self.debt_repository = debt_repository
 
     def add_new_debt(self, http_request: HttpRequest) -> HttpResponse:
+
+        self.validator = AddNewDebtValidator()
+        is_valid_or_error = self.validator.validate(http_request)
+        if is_valid_or_error.is_err():
+            return InvalidFieldsError(errors=is_valid_or_error.err())
 
         body = http_request.body
 
@@ -29,7 +35,7 @@ class DebtController:
                                         paid_parts)
 
         if response.is_err():
-            return InvalidFieldsError(field=response.err().entity, reason=response.err().reason)
+            return InvalidFieldsError(errors={response.err().entity: response.err().reason})
 
         new_debt = response.ok()
 
