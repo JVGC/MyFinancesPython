@@ -1,7 +1,5 @@
-from pkg_resources import require
-from infra.controllers.contracts.http import HttpRequest, HttpResponse
+from infra.controllers.contracts.http import HttpRequest
 from cerberus import Validator
-from infra.controllers.errors.InvalidFieldsError import InvalidFieldsError
 from infra.controllers.validators.ports.CerberusErrors import CerberusErrors
 
 from utils.result import Error, Ok, Result
