@@ -2,20 +2,16 @@
 from domain.repositories import DebtRepository
 from domain.useCases import AddNewDebt, GetDebtById, PayDebtPart, UpdateDebtDescription, DeleteDebtById
 from infra.controllers.contracts import HttpRequest, HttpResponse
+from infra.controllers.contracts.ValidatorDecorator import validate
 from infra.controllers.errors import InvalidFieldsError, NotFoundError
 from infra.controllers.validators import AddNewDebtValidator, UpdateDebtDescriptionValidator, PayDebtPartValidator
 class DebtController:
 
     def __init__(self, debt_repository: DebtRepository) -> None:
-
         self.debt_repository = debt_repository
 
+    @validate(AddNewDebtValidator())
     def add_new_debt(self, http_request: HttpRequest) -> HttpResponse:
-
-        validator = AddNewDebtValidator()
-        is_valid_or_error = validator.validate(http_request)
-        if is_valid_or_error.is_err():
-            return InvalidFieldsError(errors=is_valid_or_error.err())
 
         body = http_request.body
 
@@ -41,6 +37,7 @@ class DebtController:
         return HttpResponse({'message': 'Requisição Executada com sucesso',
                                 'debt': new_debt.to_dict()
                             }, 200)
+
     def get_debt_by_id(self, http_request: HttpRequest) -> HttpResponse:
         get_debt_by_id = GetDebtById(self.debt_repository)
 
@@ -56,13 +53,8 @@ class DebtController:
                                 'debt': debt.to_dict()
                             }, 200)
 
+    @validate(PayDebtPartValidator())
     def pay_debt_part(self, http_request: HttpRequest) -> HttpResponse:
-
-        validator = PayDebtPartValidator()
-        
-        is_valid_or_error = validator.validate(http_request)
-        if is_valid_or_error.is_err():
-            return InvalidFieldsError(errors=is_valid_or_error.err())
 
         body = http_request.body
         debt_id = body.get('debt_id')
@@ -80,13 +72,8 @@ class DebtController:
                                 'debt': paid_debt.to_dict()
                             }, 200)
 
+    @validate(UpdateDebtDescriptionValidator())
     def update_debt_description(self, http_request: HttpRequest) -> HttpResponse:
-
-        validator = UpdateDebtDescriptionValidator()
-
-        is_valid_or_error = validator.validate(http_request)
-        if is_valid_or_error.is_err():
-            return InvalidFieldsError(errors=is_valid_or_error.err())
         
         body = http_request.body
         params = http_request.params

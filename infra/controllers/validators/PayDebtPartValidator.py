@@ -1,11 +1,11 @@
 from cerberus import Validator
 
 from infra.controllers.contracts.http import HttpRequest
-from infra.controllers.validators.ports.CerberusErrors import CerberusErrors
+from infra.controllers.validators.ports import PayloadValidator, CerberusErrors
 from utils.result import Result, Error, Ok
 
 
-class PayDebtPartValidator:
+class PayDebtPartValidator(PayloadValidator):
     def __init__(self) -> None:
         self.schema = {
             'debt_id': {'type': 'string', 'required': True},

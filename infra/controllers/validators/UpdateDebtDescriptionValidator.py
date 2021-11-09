@@ -1,11 +1,11 @@
 from cerberus import Validator
 
 from infra.controllers.contracts.http import HttpRequest
-from infra.controllers.validators.ports.CerberusErrors import CerberusErrors
+from infra.controllers.validators.ports import CerberusErrors, PayloadValidator
 from utils.result import Result, Error, Ok
 
 
-class UpdateDebtDescriptionValidator:
+class UpdateDebtDescriptionValidator(PayloadValidator):
 
     def __init__(self) -> None:
                 
