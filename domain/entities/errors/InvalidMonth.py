@@ -1,6 +1,6 @@
 class InvalidMonth:
     def __init__(self, avaiable_months) -> None:
 
-        self.message = 'Mês Inválido'
+        self.message = 'Invalid Month'
         self.entity = 'Month'
-        self.reason = f"Month deveria estar entre os seguintes meses disponíveis: {avaiable_months}"
+        self.reason = f"Month should be in: {avaiable_months}"
