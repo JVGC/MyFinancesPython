@@ -9,8 +9,8 @@ from utils.result import Ok, Result
 
 class Date:
 
-    AVAIABLE_MONTHS = [item for item in range(1, 12)]
-    AVAIABLE_DAYS = [item for item in range(1, 31)]  
+    AVAIABLE_MONTHS = [item for item in range(1, 13)]
+    AVAIABLE_DAYS = [item for item in range(1, 32)]  
 
     def __init__(self,
                 year:int=None,
