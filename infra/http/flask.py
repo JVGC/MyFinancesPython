@@ -1,13 +1,15 @@
 import os
-from flask import Flask, Blueprint
-from flask_cors import CORS
-from infra.controllers.DebtController import DebtController
-from adapters import FlaskAdapter
 
+from adapters import FlaskAdapter
+from flask_cors import CORS
+from infra.controllers.operators.debt import *
 from infra.repositories import DebtRepositoryMongo
+
+from flask import Blueprint, Flask
 
 
 class FlaskApi:
+
     def __init__(self):
 
         self.APP = Flask(__name__)
@@ -15,22 +17,36 @@ class FlaskApi:
         CORS(self.APP)
         self.APP.secret_key = os.urandom(24)
         self.APP.register_blueprint(self.API, url_prefix='/api')
+        self.debt_repository = DebtRepositoryMongo()
+
         self._configure_routes()
 
     def _configure_routes(self):
 
-        debt_controller = DebtController(DebtRepositoryMongo())
-
-        self.APP.add_url_rule(
-            '/debt/add', view_func=FlaskAdapter.create(debt_controller.add_new_debt), methods=['POST'])
-        self.APP.add_url_rule('/debt/<debt_id>', view_func=FlaskAdapter.create(
-            debt_controller.get_debt_by_id), methods=['GET'])
-        self.APP.add_url_rule(
-            '/debt/pay', view_func=FlaskAdapter.create(debt_controller.pay_debt_part), methods=['POST'])
-        self.APP.add_url_rule('/debt/description/<debt_id>', view_func=FlaskAdapter.create(
-            debt_controller.update_debt_description), methods=['PUT'])
-        self.APP.add_url_rule('/debt/delete/<debt_id>', view_func=FlaskAdapter.create(
-            debt_controller.delete_debt_by_id), methods=['DELETE'])
+        self.routes = [{
+            'url': '/debt/add',
+            'operation': AddNewDebtOperator(self.debt_repository).operate,
+            'methods': ['POST']
+        }, {
+            'url': '/debt/pay',
+            'operation': PayDebtPartOperator(self.debt_repository).operate,
+            'methods': ['PUT']
+        }, {
+            'url': '/debt/description/<debt_id>',
+            'operation': UpdateDebtDescriptionOperator(self.debt_repository).operate,
+            'methods': ['PUT']
+        }, {
+            'url': '/debt/<debt_id>',
+            'operation': GetDebtByIdOperator(self.debt_repository).operate,
+            'methods': ['GET']
+        }, {
+            'url': '/debt/delete/<debt_id>',
+            'operation': DeleteDebtByIdOperator(self.debt_repository).operate,
+            'methods': ['DELETE']
+        }]
+        for route in self.routes:
+            self.APP.add_url_rule(route['url'], endpoint=route['url'], view_func=FlaskAdapter.create(
+                route['operation']), methods=route['methods'])
 
     def run(self):
         self.APP.run(host='0.0.0.0', port=5000,

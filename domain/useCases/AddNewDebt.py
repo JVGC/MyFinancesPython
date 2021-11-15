@@ -1,10 +1,10 @@
 from typing import Union
 from uuid import uuid4
-from domain.entities import Date, Debt, Date
+
+from domain.entities import Date, Debt
+from domain.entities.errors import InvalidMonth, InvalidType
 from domain.repositories import DebtRepository
 from domain.useCases.ports import StartDate
-from domain.entities.errors import InvalidMonth, InvalidType, InvalidDay
-
 from utils.result import Error, Ok, Result
 
 

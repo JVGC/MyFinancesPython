@@ -10,6 +10,5 @@ def validate(validator: PayloadValidator):
             if is_valid_or_error.is_err():
                 return InvalidFieldsError(errors=is_valid_or_error.err())
             return route(self, http_request)
-
         return controller_method
     return wrapper
