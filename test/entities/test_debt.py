@@ -17,7 +17,7 @@ class TestDebt(unittest.TestCase):
             paid_parts=5
         )
 
-        assert result.is_ok() == True
+        assert result.is_ok() is True
         assert isinstance(result.ok(), Debt)
 
     def test_id_none(self):
@@ -31,7 +31,7 @@ class TestDebt(unittest.TestCase):
             paid_parts=5
         )
 
-        assert result.is_err() == True
+        assert result.is_err() is True
         assert isinstance(result.err(), InvalidType)
 
     def test_invalid_type(self):
@@ -44,5 +44,5 @@ class TestDebt(unittest.TestCase):
             paid_parts=5
         )
 
-        assert result.is_err() == True
+        assert result.is_err() is True
         assert isinstance(result.err(), InvalidType)

@@ -1,4 +1,5 @@
 import unittest
+
 from domain.entities.errors.InvalidMonth import InvalidMonth
 from domain.entities.errors.InvalidType import InvalidType
 from domain.useCases import AddNewDebt
@@ -20,7 +21,7 @@ class TestAddNewDebt(unittest.TestCase):
                                       },
                                       paid_parts=0)
 
-        assert result.is_ok() == True
+        assert result.is_ok() is True
         assert result.ok().description == "test debt"
 
     def test_invalid_date(self):
@@ -37,5 +38,5 @@ class TestAddNewDebt(unittest.TestCase):
                                       },
                                       paid_parts=0)
 
-        assert result.is_err() == True
+        assert result.is_err() is True
         assert isinstance(result.err(), InvalidMonth)

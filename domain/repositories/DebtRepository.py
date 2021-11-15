@@ -1,7 +1,8 @@
 import abc
 from typing import List
-from domain.useCases.ports import StartDate
+
 from domain.entities import Debt
+from domain.useCases.ports import StartDate
 
 
 class DebtRepository(metaclass=abc.ABCMeta):
@@ -42,5 +43,5 @@ class DebtRepository(metaclass=abc.ABCMeta):
         pass
 
     @abc.abstractmethod
-    def get_all_debts(self, open_debts) -> List[Debt]:
+    def get_all_debts(self) -> List[Debt]:
         pass

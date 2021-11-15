@@ -25,7 +25,9 @@ class TestAddNewDebtRoute(unittest.TestCase):
         http_response = add_new_debt_operator.operate(request)
 
         assert http_response.status_code == 200
-        assert http_response.body['debt']['description'] == request.body['description']
+
+        added_debt = http_response.body['debt']
+        assert added_debt['description'] == request.body['description']
 
     def test_invalid_month(self):
         debt_repository_mongo = DebtRepositoryMongo()

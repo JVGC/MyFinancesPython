@@ -27,7 +27,7 @@ class TestPayDebtPart(unittest.TestCase):
 
         result = pay_debt_part.execute(debt_data.id)
 
-        assert result.is_ok() == True
+        assert result.is_ok() is True
 
         paid_debt = result.ok()
 
@@ -55,7 +55,7 @@ class TestPayDebtPart(unittest.TestCase):
 
         result = pay_debt_part.execute(debt_data.id)
 
-        assert result.is_err() == True
+        assert result.is_err() is True
 
         assert isinstance(result.err(), AlreadyPaidDebt)
 
@@ -66,6 +66,6 @@ class TestPayDebtPart(unittest.TestCase):
 
         result = pay_debt_part.execute('123')
 
-        assert result.is_err() == True
+        assert result.is_err() is True
 
         assert isinstance(result.err(), DebtNotFound)

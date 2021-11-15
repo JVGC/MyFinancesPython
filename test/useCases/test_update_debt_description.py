@@ -29,7 +29,7 @@ class TestUpdateDebtDescription(unittest.TestCase):
         result = update_debt_description.execute(
             id=debt_data.id, description='testando update')
 
-        assert result.is_ok() == True
+        assert result.is_ok() is True
 
         assert result.ok().description == 'testando update'
 
@@ -42,6 +42,6 @@ class TestUpdateDebtDescription(unittest.TestCase):
         result = update_debt_description.execute(
             id='123', description='testando update')
 
-        assert result.is_err() == True
+        assert result.is_err() is True
 
         assert isinstance(result.err(), DebtNotFound)

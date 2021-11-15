@@ -1,7 +1,8 @@
 import unittest
 
 from infra.controllers.contracts.http import HttpRequest
-from infra.controllers.validators.AddNewDebtValidator import AddNewDebtValidator
+from infra.controllers.validators.AddNewDebtValidator import \
+    AddNewDebtValidator
 
 
 class TestAddNewDebtValidator(unittest.TestCase):
@@ -22,7 +23,7 @@ class TestAddNewDebtValidator(unittest.TestCase):
 
         valid_or_error = add_new_debt_validator.validate(http_request)
 
-        assert valid_or_error.is_ok() == True
+        assert valid_or_error.is_ok() is True
 
     def test_total_parts_float(self):
 
@@ -40,7 +41,7 @@ class TestAddNewDebtValidator(unittest.TestCase):
 
         valid_or_error = add_new_debt_validator.validate(http_request)
 
-        assert valid_or_error.is_err() == True
+        assert valid_or_error.is_err() is True
 
         errors = valid_or_error.err()
 
@@ -61,7 +62,7 @@ class TestAddNewDebtValidator(unittest.TestCase):
 
         valid_or_error = add_new_debt_validator.validate(http_request)
 
-        assert valid_or_error.is_err() == True
+        assert valid_or_error.is_err() is True
 
         errors = valid_or_error.err()
 
@@ -90,7 +91,7 @@ class TestAddNewDebtValidator(unittest.TestCase):
 
         valid_or_error = add_new_debt_validator.validate(http_request)
 
-        assert valid_or_error.is_err() == True
+        assert valid_or_error.is_err() is True
 
         errors = valid_or_error.err()
 

@@ -25,7 +25,7 @@ class TestGetDebtById(unittest.TestCase):
         get_debt_by_id = GetDebtById(debt_repository_mongo)
         result = get_debt_by_id.execute(id=debt_data.id)
 
-        assert result.is_ok() == True
+        assert result.is_ok() is True
         assert result.ok().id == debt_data.id
 
     def test_debt_not_found(self):
@@ -34,5 +34,5 @@ class TestGetDebtById(unittest.TestCase):
         get_debt_by_id = GetDebtById(debt_repository_mongo)
         result = get_debt_by_id.execute(id='123')
 
-        assert result.is_err() == True
+        assert result.is_err() is True
         assert isinstance(result.err(), DebtNotFound)

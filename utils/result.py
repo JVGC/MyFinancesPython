@@ -1,4 +1,4 @@
-from typing import Generic, TypeVar, Union, Any
+from typing import Any, Generic, TypeVar, Union
 
 T = TypeVar("T", covariant=True)  # Success type
 E = TypeVar("E", covariant=True)  # Error type
@@ -6,7 +6,8 @@ E = TypeVar("E", covariant=True)  # Error type
 
 class Ok(Generic[T]):
     """
-    A value that indicates success and which stores arbitrary data for the return value.
+    A value that indicates success and
+    which stores arbitrary data for the return value.
     """
 
     def __init__(self, value: Any = True) -> None:
@@ -40,7 +41,8 @@ class Ok(Generic[T]):
 
 class Error(Generic[E]):
     """
-    A value that signifies failure and which stores arbitrary data for the error.
+    A value that signifies failure and
+    which stores arbitrary data for the error.
     """
 
     def __init__(self, value: E) -> None:

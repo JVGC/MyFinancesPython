@@ -66,8 +66,11 @@ class TestUpdateDebtDescriptionOpOperatorRoute(unittest.TestCase):
         update_debt_description_operator = UpdateDebtDescriptionOperator(
             debt_repository_mongo)
 
-        request = HttpRequest(body={'description': ['new_description']}, params={
-                              'debt_id': 'not_exist'})
+        request = HttpRequest(body={
+            'description': ['new_description']
+        }, params={
+            'debt_id': 'not_exist'
+        })
 
         response = update_debt_description_operator.operate(request)
 

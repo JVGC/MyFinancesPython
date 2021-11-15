@@ -1,17 +1,20 @@
 import unittest
 
-from domain.useCases import AddNewDebt, DeleteDebtById, GetAllDebts
+from domain.useCases import AddNewDebt, DeleteDebtById
+from infra.controllers.contracts.http import HttpRequest
+from infra.controllers.operators.debt import GetAllDebtsOperator
 from infra.repositories import DebtRepositoryMongo
 
 
-class TestGetAllDebts(unittest.TestCase):
+class TestGetAllDebtsRoute(unittest.TestCase):
 
     def setUp(self) -> None:
         self.added_ids = []
         self.debt_repository = DebtRepositoryMongo()
-        self.get_all_debts = GetAllDebts(self.debt_repository)
 
     def test_success(self):
+
+        get_all_debts_operator = GetAllDebtsOperator(self.debt_repository)
 
         add_new_debt = AddNewDebt(self.debt_repository)
         for i in range(10):
@@ -26,18 +29,13 @@ class TestGetAllDebts(unittest.TestCase):
                                           paid_parts=0)
             self.added_ids.append(result.ok().id)
 
-        result = self.get_all_debts.execute()
+        request = HttpRequest()
 
-        assert result.is_ok() is True
+        http_response = get_all_debts_operator.operate(request)
 
-        assert len(result.ok()) == 10
+        assert http_response.status_code == 200
 
-    def test_empty_list(self):
-
-        result = self.get_all_debts.execute()
-
-        self.assertTrue(result.is_ok)
-        self.assertEqual(len(result.ok()), 0)
+        assert len(http_response.body['debts']) == 10
 
     def tearDown(self) -> None:
         delete_debt_by_id = DeleteDebtById(self.debt_repository)

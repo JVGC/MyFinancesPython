@@ -38,8 +38,11 @@ class TestGetDebtByIdRoute(unittest.TestCase):
 
         request = HttpRequest(params={'debt_id': _id})
         http_response = get_debt_by_id_operator.operate(request)
+
         assert http_response.status_code == 200
-        assert http_response.body['debt']['description'] == new_debt.description
+
+        found_debt = http_response.body['debt']
+        assert found_debt['description'] == new_debt.description
 
     def test_debt_not_found(self):
         debt_repository_mongo = DebtRepositoryMongo()

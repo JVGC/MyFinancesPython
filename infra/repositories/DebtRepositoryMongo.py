@@ -1,11 +1,10 @@
 from typing import List
-from pymongo import MongoClient
 
+from adapters import DebtAdapter
 from domain.entities.Debt import Debt
 from domain.repositories import DebtRepository
-from adapters import DebtAdapter
-
-from Environment.MongoConfigs import mongo_user, mongo_password, mongo_url
+from Environment.MongoConfigs import mongo_password, mongo_url, mongo_user
+from pymongo import MongoClient
 
 
 class DebtRepositoryMongo(DebtRepository):
@@ -103,15 +102,8 @@ class DebtRepositoryMongo(DebtRepository):
 
         return _id
 
-    def get_all_debts(self, open_debts) -> List[Debt]:
+    def get_all_debts(self) -> List[Debt]:
         query = {}
-
-        if open_debts:
-            query['$expr'] = {
-                '$ne': [
-                    '$total_parts', '$paid_parts'
-                ]
-            }
 
         found_debts = self.db['debts'].find(query)
 
@@ -123,5 +115,4 @@ class DebtRepositoryMongo(DebtRepository):
                                                debt['paid_parts'])
                        for debt in found_debts
                        ]
-        print(found_debts)
         return found_debts

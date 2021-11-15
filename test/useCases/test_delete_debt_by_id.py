@@ -28,7 +28,7 @@ class TestDeleteDebtById(unittest.TestCase):
 
         result = delete_debt_by_id.execute(debt_data.id)
 
-        assert result.is_ok() == True
+        assert result.is_ok() is True
 
         assert result.ok() == debt_data.id
 
@@ -39,6 +39,6 @@ class TestDeleteDebtById(unittest.TestCase):
 
         result = delete_debt_by_id.execute('123')
 
-        assert result.is_err() == True
+        assert result.is_err() is True
 
         assert isinstance(result.err(), DebtNotFound)
