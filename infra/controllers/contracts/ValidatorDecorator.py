@@ -1,7 +1,7 @@
-from infra.controllers.DebtController import DebtController
 from infra.controllers.contracts import HttpRequest
 from infra.controllers.errors import InvalidFieldsError
-from infra.controllers.validators.ports.PayloadValidator import PayloadValidator
+from infra.controllers.validators.ports import PayloadValidator
+
 
 def validate(validator: PayloadValidator):
     def wrapper(route):

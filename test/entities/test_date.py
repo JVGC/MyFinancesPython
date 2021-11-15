@@ -4,6 +4,7 @@ from domain.entities import Date
 from domain.entities.errors import InvalidDay, InvalidMonth
 from domain.entities.errors.InvalidType import InvalidType
 
+
 class TestDate(unittest.TestCase):
 
     def test_create_success(self):

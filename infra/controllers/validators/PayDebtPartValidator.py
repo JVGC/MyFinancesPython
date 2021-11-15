@@ -13,10 +13,12 @@ class PayDebtPartValidator(PayloadValidator):
 
         self.validator = Validator(self.schema)
 
-    def validate(self, http_request: HttpRequest) -> Result[HttpRequest, CerberusErrors]:
+    def validate(self,
+                 http_request: HttpRequest) -> Result[HttpRequest,
+                                                      CerberusErrors]:
         is_valid = self.validator.validate(http_request.body)
 
         if not is_valid:
             return Error(self.validator.errors)
-        
-        return Ok(http_request) 
+
+        return Ok(http_request)

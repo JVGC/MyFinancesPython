@@ -6,37 +6,37 @@ from infra.controllers.contracts import HttpRequest
 from infra.controllers.DebtController import DebtController
 from infra.repositories import DebtRepositoryMongo
 
+
 class TestPayDebtPartRoute(unittest.TestCase):
 
     def test_success(self):
         debt_repository_mongo = DebtRepositoryMongo()
 
-        _id =  str(uuid4())
+        _id = str(uuid4())
 
         debt_or_err = Debt.create(_id,
-                        'testing', 
-                        10.5,
-                        5,
-                        Date.create(year=2020, month=10).ok(),
-                        8)
+                                  'testing',
+                                  10.5,
+                                  5,
+                                  Date.create(year=2020, month=10).ok(),
+                                  8)
         new_debt = debt_or_err.ok()
 
         _ = debt_repository_mongo.add(new_debt.id,
-                                        new_debt.description, 
-                                        new_debt.part_value,
-                                        new_debt.total_parts,
-                                        new_debt.start_date.to_dict(),
-                                        new_debt.total_value,
-                                        new_debt.paid_parts,
-                                        new_debt.remaining_parts,
-                                        new_debt.remaining_value)
+                                      new_debt.description,
+                                      new_debt.part_value,
+                                      new_debt.total_parts,
+                                      new_debt.start_date.to_dict(),
+                                      new_debt.total_value,
+                                      new_debt.paid_parts,
+                                      new_debt.remaining_parts,
+                                      new_debt.remaining_value)
 
         debt_controller = DebtController(debt_repository_mongo)
 
         request = HttpRequest(body={'debt_id': _id})
 
         response = debt_controller.pay_debt_part(request)
-
 
         assert response.status_code == 200
 
@@ -51,7 +51,6 @@ class TestPayDebtPartRoute(unittest.TestCase):
         request = HttpRequest(body={'debt_id': 'not_exist'})
 
         response = debt_controller.pay_debt_part(request)
-
 
         assert response.status_code == 404
 

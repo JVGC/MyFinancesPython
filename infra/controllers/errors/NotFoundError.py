@@ -1,5 +1,6 @@
 from infra.controllers.contracts import HttpResponse
 
+
 class NotFoundError(HttpResponse):
 
     def __init__(self, message) -> None:

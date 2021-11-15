@@ -37,6 +37,7 @@ class Ok(Generic[T]):
         """
         return self._value
 
+
 class Error(Generic[E]):
     """
     A value that signifies failure and which stores arbitrary data for the error.
@@ -44,7 +45,6 @@ class Error(Generic[E]):
 
     def __init__(self, value: E) -> None:
         self._value = value
-
 
     def is_ok(self) -> bool:
         return False

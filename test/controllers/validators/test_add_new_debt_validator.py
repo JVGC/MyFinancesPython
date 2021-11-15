@@ -3,6 +3,7 @@ import unittest
 from infra.controllers.contracts.http import HttpRequest
 from infra.controllers.validators.AddNewDebtValidator import AddNewDebtValidator
 
+
 class TestAddNewDebtValidator(unittest.TestCase):
 
     def test_correct_payload(self):
@@ -98,5 +99,3 @@ class TestAddNewDebtValidator(unittest.TestCase):
         assert 'eu_nao_existo' in errors.keys()
         assert 'start_date' in errors.keys()
         assert 'eu_tambem_nao' in errors['start_date'][0].keys()
-
-

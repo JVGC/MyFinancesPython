@@ -5,6 +5,7 @@ class HttpRequest:
         self.query = query
         self.params = params
 
+
 class HttpResponse:
 
     def __init__(self, body, status_code) -> None:

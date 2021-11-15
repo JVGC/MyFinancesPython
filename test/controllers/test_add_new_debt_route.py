@@ -4,10 +4,11 @@ from infra.controllers.contracts.http import HttpRequest
 from infra.controllers.DebtController import DebtController
 from infra.repositories import DebtRepositoryMongo
 
+
 class TestAddNewDebtRoute(unittest.TestCase):
 
     def test_success(self):
-        
+
         debt_repository_mongo = DebtRepositoryMongo()
         debt_controller = DebtController(debt_repository_mongo)
 
@@ -30,7 +31,7 @@ class TestAddNewDebtRoute(unittest.TestCase):
         debt_repository_mongo = DebtRepositoryMongo()
         debt_controller = DebtController(debt_repository_mongo)
 
-        request = HttpRequest(body = {
+        request = HttpRequest(body={
             'description': 'test_add_new_debt_route',
             'part_value': 18.9,
             'total_parts': 15,
@@ -51,7 +52,7 @@ class TestAddNewDebtRoute(unittest.TestCase):
         debt_repository_mongo = DebtRepositoryMongo()
         debt_controller = DebtController(debt_repository_mongo)
 
-        request = HttpRequest(body = {
+        request = HttpRequest(body={
             'description': 'test_add_new_debt_route',
             'part_value': 18.9,
             'total_parts': 15.5,
@@ -69,5 +70,3 @@ class TestAddNewDebtRoute(unittest.TestCase):
         assert 'total_parts' in http_response.body['errors'].keys()
         assert 'paid_parts' in http_response.body['errors'].keys()
         assert 'not_exist' in http_response.body['errors'].keys()
-
-

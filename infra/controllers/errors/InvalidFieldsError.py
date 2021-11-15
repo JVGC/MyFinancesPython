@@ -3,7 +3,7 @@ from infra.controllers.contracts.http import HttpResponse
 
 class InvalidFieldsError(HttpResponse):
 
-    def __init__(self, errors:dict) -> None:
+    def __init__(self, errors: dict) -> None:
         status_code = 400
         self.message = 'Dados Inválidos'
 

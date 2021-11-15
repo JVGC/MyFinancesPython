@@ -3,6 +3,7 @@ import unittest
 from domain.entities import Date, Debt
 from domain.entities.errors.InvalidType import InvalidType
 
+
 class TestDebt(unittest.TestCase):
 
     def test_create_success(self):
@@ -20,7 +21,7 @@ class TestDebt(unittest.TestCase):
         assert isinstance(result.ok(), Debt)
 
     def test_id_none(self):
-        
+
         result = Debt.create(
             id=None,
             description='descricao teste',

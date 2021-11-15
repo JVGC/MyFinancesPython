@@ -1,6 +1,26 @@
 # MyFinancesPython
 Project designed to help organize my personal finances
 
+---
+### Linting:
+
+-  To see lint-errors:
+```bash
+    pycodestyle .
+```
+
+-  To correct lint-errors:
+```bash
+    autopep8 --in-place --recursive .
+```
+
+---
+
+### Testing
+```bash
+    python3 -m unittest
+```
+
 
 # DEBT
 ## Entities
@@ -12,25 +32,16 @@ Project designed to help organize my personal finances
 - Número de parcelas restantes (Int) - Calculado
 - Valor restante (float) - Calculado
 - Mês que começou/Ano (Month) - Recebido
-- Array de meses que tem que ser pago(Array de Month) - Calculado
 
 ## Use Cases
 
 - Quero saber quanto eu tenho de dívida nos próximos meses
 - Quero saber quanto eu tenho de dívida nesse mês atual
 - Precisa conseguir marcar uma dívida como paga para o mês atual
-- Deletar um débito
-- Adicionar um novo débito
-- Atualizar um débito
 
 ## TODO
-- Testar erros nos casos de uso
-- Adicionar array de meses
 - Criar casos de uso:
-    - Deletar um débito
     - Buscar pelos débitos em aberto
     - Buscar pelas dívidas para um determinado mês
 
-- Criar Adapter para o Flask
-- Criar validações com o cerberus
 - Implementar Docker-Compose

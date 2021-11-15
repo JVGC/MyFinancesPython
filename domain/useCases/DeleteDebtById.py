@@ -18,5 +18,3 @@ class DeleteDebtById:
             return Error(DebtNotFound())
 
         return Ok(self.debt_repository.delete_by_id(debt_id))
-            
-            

@@ -1,4 +1,6 @@
 from .UseCaseError import UseCaseError
+
+
 class AlreadyPaidDebt(UseCaseError):
     def __init__(self) -> None:
 

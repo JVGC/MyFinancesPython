@@ -4,6 +4,7 @@ from domain.useCases.errors.DebtNotFound import DebtNotFound
 
 from utils import Error, Ok, Result
 
+
 class GetDebtById:
 
     def __init__(self, debt_repository: DebtRepository):
