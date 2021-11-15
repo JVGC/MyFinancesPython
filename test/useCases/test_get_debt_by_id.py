@@ -1,8 +1,9 @@
-from uuid import uuid4
-from domain.useCases.GetDebtById import GetDebtById
-from domain.useCases.errors.DebtNotFound import DebtNotFound
-from infra.repositories import DebtRepositoryMemory, DebtRepositoryMongo
 import unittest
+from uuid import uuid4
+
+from domain.useCases.errors.DebtNotFound import DebtNotFound
+from domain.useCases.GetDebtById import GetDebtById
+from infra.repositories import DebtRepositoryMemory, DebtRepositoryMongo
 
 
 class TestGetDebtById(unittest.TestCase):
@@ -25,8 +26,8 @@ class TestGetDebtById(unittest.TestCase):
         get_debt_by_id = GetDebtById(debt_repository_mongo)
         result = get_debt_by_id.execute(id=debt_data.id)
 
-        assert result.is_ok() is True
-        assert result.ok().id == debt_data.id
+        self.assertTrue(result.is_ok())
+        self.assertEqual(result.ok().id, debt_data.id)
 
     def test_debt_not_found(self):
         debt_repository_mongo = DebtRepositoryMongo()
@@ -34,5 +35,5 @@ class TestGetDebtById(unittest.TestCase):
         get_debt_by_id = GetDebtById(debt_repository_mongo)
         result = get_debt_by_id.execute(id='123')
 
-        assert result.is_err() is True
-        assert isinstance(result.err(), DebtNotFound)
+        self.assertTrue(result.is_err())
+        self.assertIsInstance(result.err(), DebtNotFound)

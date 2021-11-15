@@ -33,9 +33,8 @@ class TestGetAllDebtsRoute(unittest.TestCase):
 
         http_response = get_all_debts_operator.operate(request)
 
-        assert http_response.status_code == 200
-
-        assert len(http_response.body['debts']) == 10
+        self.assertEqual(http_response.status_code, 200)
+        self.assertEqual(len(http_response.body['debts']), 10)
 
     def tearDown(self) -> None:
         delete_debt_by_id = DeleteDebtById(self.debt_repository)

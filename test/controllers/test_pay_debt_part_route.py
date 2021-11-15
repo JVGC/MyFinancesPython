@@ -38,10 +38,11 @@ class TestPayDebtPartRoute(unittest.TestCase):
 
         response = pay_debt_part_operator.operate(request)
 
-        assert response.status_code == 200
+        self.assertEqual(response.status_code, 200)
 
-        assert response.body['debt']['_id'] == _id
-        assert response.body['debt']['paid_parts'] == new_debt.paid_parts+1
+        self.assertEqual(response.body['debt']['_id'], _id)
+        self.assertEqual(response.body['debt']
+                         ['paid_parts'], new_debt.paid_parts+1)
 
     def test_debt_not_found(self):
 
@@ -52,7 +53,7 @@ class TestPayDebtPartRoute(unittest.TestCase):
 
         response = pay_debt_part_operator.operate(request)
 
-        assert response.status_code == 404
+        self.assertEqual(response.status_code, 404)
 
     def test_invalid_payload(self):
 
@@ -63,5 +64,5 @@ class TestPayDebtPartRoute(unittest.TestCase):
 
         response = pay_debt_part_operator.operate(request)
 
-        assert response.status_code == 400
-        assert 'debt_id' in response.body['errors'].keys()
+        self.assertEqual(response.status_code, 400)
+        self.assertIn('debt_id', response.body['errors'])

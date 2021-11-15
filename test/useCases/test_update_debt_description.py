@@ -1,9 +1,9 @@
-from uuid import uuid4
-from domain.useCases.UpdateDebtDescription import UpdateDebtDescription
-from domain.useCases.errors.DebtNotFound import DebtNotFound
-from infra.repositories import DebtRepositoryMemory, DebtRepositoryMongo
 import unittest
+from uuid import uuid4
 
+from domain.useCases.errors.DebtNotFound import DebtNotFound
+from domain.useCases.UpdateDebtDescription import UpdateDebtDescription
+from infra.repositories import DebtRepositoryMemory, DebtRepositoryMongo
 from utils import result
 
 
@@ -23,15 +23,14 @@ class TestUpdateDebtDescription(unittest.TestCase):
             total_value=1350.0,
             remaining_parts=10,
             remaining_value=1350.0)
+        new_description = 'testando update'
 
         update_debt_description = UpdateDebtDescription(debt_repository_mongo)
-
         result = update_debt_description.execute(
-            id=debt_data.id, description='testando update')
+            id=debt_data.id, description=new_description)
 
-        assert result.is_ok() is True
-
-        assert result.ok().description == 'testando update'
+        self.assertTrue(result.is_ok())
+        self.assertEqual(result.ok().description, new_description)
 
     def test_debt_not_found(self):
 
@@ -42,6 +41,5 @@ class TestUpdateDebtDescription(unittest.TestCase):
         result = update_debt_description.execute(
             id='123', description='testando update')
 
-        assert result.is_err() is True
-
-        assert isinstance(result.err(), DebtNotFound)
+        self.assertTrue(result.is_err())
+        self.assertIsInstance(result.err(), DebtNotFound)

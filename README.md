@@ -18,21 +18,8 @@ Project designed to help organize my personal finances
 
 ### Testing
 ```bash
-    python3 -m unittest
+    python3 -m unittest -v
 ```
-
-
-# DEBT
-## Entities
-- Description (String) - Recebido
-- Valor da Parcela (Float) - Recebido
-- Quantidade totais de parcelas(Int) - Recebido
-- Valor Total do débito (Float) - Calculado
-- Número de parcelas pagas (Int) - Recebido
-- Número de parcelas restantes (Int) - Calculado
-- Valor restante (float) - Calculado
-- Mês que começou/Ano (Month) - Recebido
-
 ## Use Cases
 
 - Quero saber quanto eu tenho de dívida nos próximos meses
@@ -40,8 +27,6 @@ Project designed to help organize my personal finances
 - Precisa conseguir marcar uma dívida como paga para o mês atual
 
 ## TODO
-- Criar casos de uso:
-    - Buscar pelos débitos em aberto
-    - Buscar pelas dívidas para um determinado mês
-
-- Implementar Docker-Compose
+- Implementar Docker-Compose para o database e para a aplicação rodar
+- Implementar TearDown, SetUp e Fixtures nos testes
+- Criar Factories dos repository

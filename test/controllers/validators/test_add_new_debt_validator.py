@@ -45,7 +45,7 @@ class TestAddNewDebtValidator(unittest.TestCase):
 
         errors = valid_or_error.err()
 
-        assert isinstance(errors, dict)
+        self.assertIsInstance(errors, dict)
 
         assert 'total_parts' in errors.keys()
 
@@ -66,7 +66,7 @@ class TestAddNewDebtValidator(unittest.TestCase):
 
         errors = valid_or_error.err()
 
-        assert isinstance(errors, dict)
+        self.assertIsInstance(errors, dict)
 
         assert 'paid_parts' in errors.keys()
         assert 'total_parts' in errors.keys()
@@ -95,7 +95,7 @@ class TestAddNewDebtValidator(unittest.TestCase):
 
         errors = valid_or_error.err()
 
-        assert isinstance(errors, dict)
+        self.assertIsInstance(errors, dict)
 
         assert 'eu_nao_existo' in errors.keys()
         assert 'start_date' in errors.keys()

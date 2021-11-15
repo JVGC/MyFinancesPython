@@ -1,8 +1,9 @@
-from uuid import uuid4
-from domain.useCases.PayDebtPart import PayDebtPart
-from domain.useCases.errors import AlreadyPaidDebt, DebtNotFound
-from infra.repositories import DebtRepositoryMemory, DebtRepositoryMongo
 import unittest
+from uuid import uuid4
+
+from domain.useCases.errors import AlreadyPaidDebt, DebtNotFound
+from domain.useCases.PayDebtPart import PayDebtPart
+from infra.repositories import DebtRepositoryMemory, DebtRepositoryMongo
 
 
 class TestPayDebtPart(unittest.TestCase):
@@ -27,13 +28,13 @@ class TestPayDebtPart(unittest.TestCase):
 
         result = pay_debt_part.execute(debt_data.id)
 
-        assert result.is_ok() is True
+        self.assertTrue(result.is_ok())
 
         paid_debt = result.ok()
 
-        assert paid_debt.paid_parts == 1
-        assert paid_debt.remaining_parts == 9
-        assert paid_debt.remaining_value == 1215
+        self.assertEqual(paid_debt.paid_parts, 1)
+        self.assertEqual(paid_debt.remaining_parts, 9)
+        self.assertEqual(paid_debt.remaining_value, 1215)
 
     def test_already_paid(self):
         debt_repository_mongo = DebtRepositoryMongo()
@@ -55,9 +56,8 @@ class TestPayDebtPart(unittest.TestCase):
 
         result = pay_debt_part.execute(debt_data.id)
 
-        assert result.is_err() is True
-
-        assert isinstance(result.err(), AlreadyPaidDebt)
+        self.assertTrue(result.is_err())
+        self.assertIsInstance(result.err(), AlreadyPaidDebt)
 
     def test_not_found(self):
         debt_repository_mongo = DebtRepositoryMongo()
@@ -66,6 +66,5 @@ class TestPayDebtPart(unittest.TestCase):
 
         result = pay_debt_part.execute('123')
 
-        assert result.is_err() is True
-
-        assert isinstance(result.err(), DebtNotFound)
+        self.assertTrue(result.is_err())
+        self.assertIsInstance(result.err(), DebtNotFound)

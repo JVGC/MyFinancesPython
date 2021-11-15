@@ -41,10 +41,11 @@ class TestUpdateDebtDescriptionOpOperatorRoute(unittest.TestCase):
 
         response = update_debt_description_operator.operate(request)
 
-        assert response.status_code == 200
+        self.assertEqual(response.status_code, 200)
 
-        assert response.body['debt']['_id'] == _id
-        assert response.body['debt']['description'] == new_description
+        self.assertEqual(response.body['debt']['_id'], _id)
+        self.assertEqual(response.body['debt']
+                         ['description'], new_description)
 
     def test_debt_not_found(self):
 
@@ -54,11 +55,11 @@ class TestUpdateDebtDescriptionOpOperatorRoute(unittest.TestCase):
         new_description = 'new_description'
 
         request = HttpRequest(body={'description': new_description}, params={
-                              'debt_id': 'not_exist'})
+            'debt_id': 'not_exist'})
 
         response = update_debt_description_operator.operate(request)
 
-        assert response.status_code == 404
+        self.assertEqual(response.status_code, 404)
 
     def test_invalid_payload(self):
 
@@ -74,5 +75,5 @@ class TestUpdateDebtDescriptionOpOperatorRoute(unittest.TestCase):
 
         response = update_debt_description_operator.operate(request)
 
-        assert response.status_code == 400
-        assert 'description' in response.body['errors'].keys()
+        self.assertEqual(response.status_code, 400)
+        self.assertIn('description', response.body['errors'])

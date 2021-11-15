@@ -1,5 +1,6 @@
 import unittest
 
+from infra.controllers.contracts import http
 from infra.controllers.contracts.http import HttpRequest
 from infra.controllers.operators.debt import AddNewDebtOperator
 from infra.repositories import DebtRepositoryMongo
@@ -24,10 +25,11 @@ class TestAddNewDebtRoute(unittest.TestCase):
         })
         http_response = add_new_debt_operator.operate(request)
 
-        assert http_response.status_code == 200
+        self.assertEqual(http_response.status_code, 200)
 
         added_debt = http_response.body['debt']
-        assert added_debt['description'] == request.body['description']
+        self.assertEqual(added_debt['description'],
+                         request.body['description'])
 
     def test_invalid_month(self):
         debt_repository_mongo = DebtRepositoryMongo()
@@ -45,10 +47,10 @@ class TestAddNewDebtRoute(unittest.TestCase):
         })
         http_response = add_new_debt_operator.operate(request)
 
-        assert http_response.status_code == 400
+        self.assertEqual(http_response.status_code, 400)
 
-        assert isinstance(http_response.body['errors'], dict)
-        assert 'Month' in http_response.body['errors'].keys()
+        self.assertIsInstance(http_response.body['errors'], dict)
+        self.assertIn('Month', http_response.body['errors'])
 
     def test_invalid_payload(self):
         debt_repository_mongo = DebtRepositoryMongo()
@@ -66,9 +68,10 @@ class TestAddNewDebtRoute(unittest.TestCase):
         })
         http_response = add_new_debt_operator.operate(request)
 
-        assert http_response.status_code == 400
+        self.assertEqual(http_response.status_code, 400)
 
-        assert isinstance(http_response.body['errors'], dict)
-        assert 'total_parts' in http_response.body['errors'].keys()
-        assert 'paid_parts' in http_response.body['errors'].keys()
-        assert 'not_exist' in http_response.body['errors'].keys()
+        self.assertIsInstance(http_response.body['errors'], dict)
+
+        self.assertIn('total_parts', http_response.body['errors'])
+        self.assertIn('paid_parts', http_response.body['errors'])
+        self.assertIn('not_exist', http_response.body['errors'])

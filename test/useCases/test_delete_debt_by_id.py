@@ -1,5 +1,6 @@
 import unittest
 from uuid import uuid4
+
 from domain.useCases import DeleteDebtById
 from domain.useCases.AddNewDebt import AddNewDebt
 from domain.useCases.errors.DebtNotFound import DebtNotFound
@@ -28,9 +29,8 @@ class TestDeleteDebtById(unittest.TestCase):
 
         result = delete_debt_by_id.execute(debt_data.id)
 
-        assert result.is_ok() is True
-
-        assert result.ok() == debt_data.id
+        self.assertTrue(result.is_ok())
+        self.assertEqual(result.ok(), debt_data.id)
 
     def test_debt_not_found(self):
         debt_repository_mongo = DebtRepositoryMongo()
@@ -39,6 +39,5 @@ class TestDeleteDebtById(unittest.TestCase):
 
         result = delete_debt_by_id.execute('123')
 
-        assert result.is_err() is True
-
-        assert isinstance(result.err(), DebtNotFound)
+        self.assertTrue(result.is_err())
+        self.assertIsInstance(result.err(), DebtNotFound)

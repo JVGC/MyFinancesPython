@@ -38,9 +38,11 @@ class TestDeleteDebtByIdRoute(unittest.TestCase):
                                       new_debt.remaining_value)
 
         request = HttpRequest(params={'debt_id': _id})
+
         http_response = delete_debt_by_id_operator.operate(request)
-        assert http_response.status_code == 200
-        assert http_response.body['debt_id'] == _id
+
+        self.assertEqual(http_response.status_code, 200)
+        self.assertEqual(http_response.body['debt_id'], _id)
 
     def test_debt_not_found(self):
         debt_repository_mongo = DebtRepositoryMongo()
@@ -50,6 +52,5 @@ class TestDeleteDebtByIdRoute(unittest.TestCase):
         request = HttpRequest(params={'debt_id': '123'})
         http_response = delete_debt_by_id_operator.operate(request)
 
-        assert http_response.status_code == 404
-
-        assert isinstance(http_response, NotFoundError)
+        self.assertEqual(http_response.status_code, 404)
+        self.assertIsInstance(http_response, NotFoundError)

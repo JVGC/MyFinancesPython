@@ -28,15 +28,14 @@ class TestGetAllDebts(unittest.TestCase):
 
         result = self.get_all_debts.execute()
 
-        assert result.is_ok() is True
-
-        assert len(result.ok()) == 10
+        self.assertTrue(result.is_ok)
+        self.assertEqual(len(result.ok()), 10)
 
     def test_empty_list(self):
 
         result = self.get_all_debts.execute()
 
-        self.assertTrue(result.is_ok)
+        self.assertTrue(result.is_ok())
         self.assertEqual(len(result.ok()), 0)
 
     def tearDown(self) -> None:

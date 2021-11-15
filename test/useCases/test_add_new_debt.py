@@ -12,7 +12,7 @@ class TestAddNewDebt(unittest.TestCase):
         debt_repository_mongo = DebtRepositoryMongo()
         add_new_debt = AddNewDebt(debt_repository_mongo)
 
-        result = add_new_debt.execute(description="test debt",
+        result = add_new_debt.execute(description="test_debt",
                                       part_value=135.0,
                                       total_parts=10,
                                       start_date_data={
@@ -21,8 +21,8 @@ class TestAddNewDebt(unittest.TestCase):
                                       },
                                       paid_parts=0)
 
-        assert result.is_ok() is True
-        assert result.ok().description == "test debt"
+        self.assertTrue(result.is_ok())
+        self.assertEqual(result.ok().description, 'test_debt')
 
     def test_invalid_date(self):
 
@@ -38,5 +38,5 @@ class TestAddNewDebt(unittest.TestCase):
                                       },
                                       paid_parts=0)
 
-        assert result.is_err() is True
-        assert isinstance(result.err(), InvalidMonth)
+        self.assertTrue(result.is_err())
+        self.assertIsInstance(result.err(), InvalidMonth)
