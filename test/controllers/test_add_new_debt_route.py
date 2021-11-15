@@ -1,7 +1,7 @@
 import unittest
-from infra.controllers.contracts.http import HttpRequest
 
-from infra.controllers.DebtController import DebtController
+from infra.controllers.contracts.http import HttpRequest
+from infra.controllers.operators.debt import AddNewDebtOperator
 from infra.repositories import DebtRepositoryMongo
 
 
@@ -10,7 +10,7 @@ class TestAddNewDebtRoute(unittest.TestCase):
     def test_success(self):
 
         debt_repository_mongo = DebtRepositoryMongo()
-        debt_controller = DebtController(debt_repository_mongo)
+        add_new_debt_operator = AddNewDebtOperator(debt_repository_mongo)
 
         request = HttpRequest(body={
             'description': 'test_add_new_debt_route',
@@ -22,14 +22,14 @@ class TestAddNewDebtRoute(unittest.TestCase):
             },
             'paid_parts': 10
         })
-        http_response = debt_controller.add_new_debt(request)
+        http_response = add_new_debt_operator.operate(request)
 
         assert http_response.status_code == 200
         assert http_response.body['debt']['description'] == request.body['description']
 
     def test_invalid_month(self):
         debt_repository_mongo = DebtRepositoryMongo()
-        debt_controller = DebtController(debt_repository_mongo)
+        add_new_debt_operator = AddNewDebtOperator(debt_repository_mongo)
 
         request = HttpRequest(body={
             'description': 'test_add_new_debt_route',
@@ -41,7 +41,7 @@ class TestAddNewDebtRoute(unittest.TestCase):
             },
             'paid_parts': 10
         })
-        http_response = debt_controller.add_new_debt(request)
+        http_response = add_new_debt_operator.operate(request)
 
         assert http_response.status_code == 400
 
@@ -50,7 +50,7 @@ class TestAddNewDebtRoute(unittest.TestCase):
 
     def test_invalid_payload(self):
         debt_repository_mongo = DebtRepositoryMongo()
-        debt_controller = DebtController(debt_repository_mongo)
+        add_new_debt_operator = AddNewDebtOperator(debt_repository_mongo)
 
         request = HttpRequest(body={
             'description': 'test_add_new_debt_route',
@@ -62,7 +62,7 @@ class TestAddNewDebtRoute(unittest.TestCase):
             },
             'not_exist': '100'
         })
-        http_response = debt_controller.add_new_debt(request)
+        http_response = add_new_debt_operator.operate(request)
 
         assert http_response.status_code == 400
 

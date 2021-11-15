@@ -1,13 +1,12 @@
 import unittest
 from uuid import uuid4
 
-from pymongo import response
 from domain.entities import Date, Debt
 from infra.controllers.contracts.http import HttpRequest
-
-from infra.controllers.DebtController import DebtController
 from infra.controllers.errors import NotFoundError
+from infra.controllers.operators.debt import GetDebtByIdOperator
 from infra.repositories import DebtRepositoryMongo
+from pymongo import response
 
 
 class TestGetDebtByIdRoute(unittest.TestCase):
@@ -15,7 +14,7 @@ class TestGetDebtByIdRoute(unittest.TestCase):
     def test_success(self):
 
         debt_repository_mongo = DebtRepositoryMongo()
-        debt_controller = DebtController(debt_repository_mongo)
+        get_debt_by_id_operator = GetDebtByIdOperator(debt_repository_mongo)
 
         _id = str(uuid4())
 
@@ -38,16 +37,16 @@ class TestGetDebtByIdRoute(unittest.TestCase):
                                       new_debt.remaining_value)
 
         request = HttpRequest(params={'debt_id': _id})
-        http_response = debt_controller.get_debt_by_id(request)
+        http_response = get_debt_by_id_operator.operate(request)
         assert http_response.status_code == 200
         assert http_response.body['debt']['description'] == new_debt.description
 
     def test_debt_not_found(self):
         debt_repository_mongo = DebtRepositoryMongo()
-        debt_controller = DebtController(debt_repository_mongo)
+        get_debt_by_id_operator = GetDebtByIdOperator(debt_repository_mongo)
 
         request = HttpRequest(params={'debt_id': '123'})
-        http_response = debt_controller.get_debt_by_id(request)
+        http_response = get_debt_by_id_operator.operate(request)
 
         assert http_response.status_code == 404
 
